@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_edit_akun'])) {
     if (!isset($conn) || !$conn instanceof mysqli) {
         $pesan_update = "Kesalahan koneksi database.";
     } else {
-        $nama_pengguna_baru = mysqli_real_escape_string($conn, $_POST['nama_pengguna_baru']);
+        $nama_pengguna_baru = $conn->real_escape_string($_POST['nama_pengguna_baru']);
         $sandi_baru = $_POST['sandi_baru'];
 
         if (empty($nama_pengguna_baru)) {

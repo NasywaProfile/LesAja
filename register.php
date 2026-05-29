@@ -10,9 +10,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['daftar'])) {
         $message_content = "Kesalahan koneksi database.";
         $message_type = "error";
     } else {
-        $nama_pengguna_form = mysqli_real_escape_string($conn, $_POST['nama_pengguna']);
+        $nama_pengguna_form = $conn->real_escape_string($_POST['nama_pengguna']);
         $password = $_POST['password'];
-        $role = mysqli_real_escape_string($conn, $_POST['role']);
+        $role = $conn->real_escape_string($_POST['role']);
 
         if (empty($nama_pengguna_form) || empty($password) || empty($role)) {
             $message_content = "Nama Pengguna, Kata Sandi, dan Role harus diisi!";

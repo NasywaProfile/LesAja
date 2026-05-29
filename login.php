@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         $message_content = "Kesalahan koneksi database.";
         $message_type = "error";
     } else {
-        $username_input = mysqli_real_escape_string($conn, $_POST['username']);
+        $username_input = $conn->real_escape_string($_POST['username']);
         $password_input = $_POST['password'];
 
         if (empty($username_input) || empty($password_input)) {
