@@ -279,6 +279,11 @@ class MockMySQLi extends mysqli {
         }
         return true;
     }
+
+    #[\ReturnTypeWillChange]
+    public function ping() {
+        return true;
+    }
 }
 
 // Instantiate the custom database connection
