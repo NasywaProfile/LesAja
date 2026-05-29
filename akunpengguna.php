@@ -11,7 +11,7 @@ $id_pengguna_session = $_SESSION['user_id'];
 $pesan_update = ""; 
 
 $pengguna = null;
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $stmt_pengguna_awal = $conn->prepare("SELECT id_pengguna, nama_pengguna, foto_profil FROM pengguna WHERE id_pengguna = ?");
     if ($stmt_pengguna_awal) {
         $id_pengguna_int = (int)$id_pengguna_session; 
@@ -35,7 +35,7 @@ if ($pengguna) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_edit_akun'])) {
-    if (!isset($conn) || !$conn instanceof mysqli) {
+    if (!isset($conn) || !is_object($conn)) {
         $pesan_update = "Kesalahan koneksi database.";
     } else {
         $nama_pengguna_baru = $conn->real_escape_string($_POST['nama_pengguna_baru']);
@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_edit_akun'])) {
 }
 
 $riwayat_les = [];
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $stmt_riwayat = $conn->prepare("
         SELECT 
             pl.tanggal_les_diajukan, pl.jam_les_diajukan, pl.lokasi_les_diajukan,
@@ -749,7 +749,7 @@ if (!function_exists('format_jam_wib')) {
             </main>
         </div>
     </div>
-    <?php if (isset($conn) && $conn instanceof mysqli) {
+    <?php if (isset($conn) && is_object($conn)) {
         $conn->close();
     } ?>
 </body>

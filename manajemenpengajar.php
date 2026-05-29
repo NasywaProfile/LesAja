@@ -15,7 +15,7 @@ $permintaan_les_list = [];
 $error_message_manajemen = null;
 $has_active_lesson = false;
 
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $sql_permintaan = "
         (SELECT id_permintaan, nama_pemesan_les, keahlian_les, jenjang_les,
                 lokasi_les_diajukan, tanggal_les_diajukan, jam_les_diajukan, harga_saat_booking,
@@ -387,7 +387,7 @@ if (!function_exists('format_jam_wib_manajemen')) {
     </div>
 
     <?php
-        if (isset($conn) && $conn instanceof mysqli && $conn->ping()) {
+        if (isset($conn) && is_object($conn) && $conn->ping()) {
             $conn->close();
         }
     ?>

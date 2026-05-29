@@ -32,7 +32,7 @@ if ($aksi == 'terima') {
     exit();
 }
 
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $sql = "UPDATE permintaan_les SET status_permintaan = ? WHERE id_permintaan = ? AND id_pengajar = ?";
     $stmt = $conn->prepare($sql);
 

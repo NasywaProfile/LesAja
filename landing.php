@@ -42,7 +42,7 @@ if ($result_testimonials) {
     }
 }
 
-if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error && $conn->ping()) {
+if (isset($conn) && is_object($conn) && !$conn->connect_error && $conn->ping()) {
     $conn->close();
 }
 ?>

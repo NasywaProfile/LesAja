@@ -18,7 +18,7 @@ if (!function_exists('tampilkan_harga')) {
 }
 
 $teachers = [];
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
 
     $sql = "SELECT id_pengajar, nama_pengajar, foto_profil, keahlian, jenjang_keahlian, lokasi, harga_layanan, rating
             FROM pengajar
@@ -66,7 +66,7 @@ if (isset($conn) && $conn instanceof mysqli) {
         }
         $stmt->close();
     }
-    if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error && $conn->ping()) {
+    if (isset($conn) && is_object($conn) && !$conn->connect_error && $conn->ping()) {
         $conn->close();
     }
 }

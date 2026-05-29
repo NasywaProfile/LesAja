@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        if (!isset($conn) || !($conn instanceof mysqli) || $conn->connect_error) {
+        if (!isset($conn) || !is_object($conn) || $conn->connect_error) {
             throw new Exception("Koneksi ke basis data gagal.");
         }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['message'] = 'Terjadi kesalahan sistem: ' . $e->getMessage();
         error_log("Error pada rating.php: " . $e->getMessage());
     } finally {
-        if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error && $conn->ping()) {
+        if (isset($conn) && is_object($conn) && !$conn->connect_error && $conn->ping()) {
             $conn->close();
         }
     }

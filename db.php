@@ -68,6 +68,7 @@ if ($is_new) {
             jawaban TEXT,
             foto_tugas TEXT,
             tanggal_kirim TEXT,
+            tanggal_dijawab TEXT,
             rating_diberikan INTEGER,
             review_text TEXT
         );
@@ -190,43 +191,24 @@ class MockMySQLiStmt {
     public function close() { return true; }
 }
 
-class MockMySQLi extends mysqli {
+class MockMySQLi {
     public $sqlite;
-    private $mock_error = '';
-    private $mock_insert_id = 0;
-    private $mock_affected_rows = 0;
-    private $mock_connect_error = null;
-    private $mock_connect_errno = 0;
+    public $error = '';
+    public $insert_id = 0;
+    public $affected_rows = 0;
+    public $connect_error = null;
+    public $connect_errno = 0;
 
     public function __construct($sqlite_file) {
         try {
             $this->sqlite = new SQLite3($sqlite_file);
         } catch (Exception $e) {
-            $this->mock_connect_error = $e->getMessage();
-            $this->mock_connect_errno = 2002;
+            $this->connect_error = $e->getMessage();
+            $this->connect_errno = 2002;
         }
     }
 
-    public function __get($name) {
-        if ($name === 'error') return $this->mock_error;
-        if ($name === 'insert_id') return $this->mock_insert_id;
-        if ($name === 'affected_rows') return $this->mock_affected_rows;
-        if ($name === 'connect_error') return $this->mock_connect_error;
-        if ($name === 'connect_errno') return $this->mock_connect_errno;
-        return parent::__get($name);
-    }
-
-    public function __set($name, $value) {
-        if ($name === 'error') $this->mock_error = $value;
-        elseif ($name === 'insert_id') $this->mock_insert_id = $value;
-        elseif ($name === 'affected_rows') $this->mock_affected_rows = $value;
-        elseif ($name === 'connect_error') $this->mock_connect_error = $value;
-        elseif ($name === 'connect_errno') $this->mock_connect_errno = $value;
-        else parent::__set($name, $value);
-    }
-
-    #[\ReturnTypeWillChange]
-    public function query($query, $result_mode = MYSQLI_STORE_RESULT) {
+    public function query($query, $result_mode = null) {
         // Adapt MySQL-specific datetime functions to SQLite
         $query = str_ireplace('NOW()', "datetime('now', 'localtime')", $query);
         $query = str_ireplace('CURRENT_TIMESTAMP', "datetime('now', 'localtime')", $query);
@@ -236,43 +218,38 @@ class MockMySQLi extends mysqli {
         if ($is_select) {
             $res = @$this->sqlite->query($query);
             if (!$res) {
-                $this->mock_error = $this->sqlite->lastErrorMsg();
+                $this->error = $this->sqlite->lastErrorMsg();
                 return false;
             }
             return new MockMySQLiResult($res);
         } else {
             $res = @$this->sqlite->exec($query);
             if (!$res) {
-                $this->mock_error = $this->sqlite->lastErrorMsg();
+                $this->error = $this->sqlite->lastErrorMsg();
                 return false;
             }
-            $this->mock_insert_id = $this->sqlite->lastInsertRowID();
-            $this->mock_affected_rows = $this->sqlite->changes();
+            $this->insert_id = $this->sqlite->lastInsertRowID();
+            $this->affected_rows = $this->sqlite->changes();
             return true;
         }
     }
 
-    #[\ReturnTypeWillChange]
     public function prepare($query) {
         $query = str_ireplace('NOW()', "datetime('now', 'localtime')", $query);
         $query = str_ireplace('CURRENT_TIMESTAMP', "datetime('now', 'localtime')", $query);
         return new MockMySQLiStmt($this, $this->sqlite, $query);
     }
 
-    #[\ReturnTypeWillChange]
     public function real_escape_string($string) {
         return SQLite3::escapeString($string);
     }
 
-    #[\ReturnTypeWillChange]
     public function escape_string($string) {
         return SQLite3::escapeString($string);
     }
 
-    #[\ReturnTypeWillChange]
     public function set_charset($charset) { return true; }
     
-    #[\ReturnTypeWillChange]
     public function close() {
         if ($this->sqlite) {
             $this->sqlite->close();
@@ -280,7 +257,6 @@ class MockMySQLi extends mysqli {
         return true;
     }
 
-    #[\ReturnTypeWillChange]
     public function ping() {
         return true;
     }

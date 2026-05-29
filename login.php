@@ -6,7 +6,7 @@ $message_content = "";
 $message_type = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-    if (!isset($conn) || !$conn instanceof mysqli) {
+    if (!isset($conn) || !is_object($conn)) {
         $message_content = "Kesalahan koneksi database.";
         $message_type = "error";
     } else {
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     }
 }
 
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $conn->close();
 }
 ?>

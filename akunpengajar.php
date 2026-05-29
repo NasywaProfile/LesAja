@@ -12,7 +12,7 @@ $pesan_update_akun = "";
 $pesan_update_statistik = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_edit_akun'])) {
-    if (!isset($conn) || !$conn instanceof mysqli) {
+    if (!isset($conn) || !is_object($conn)) {
         $pesan_update_akun = "Kesalahan koneksi database.";
     } else {
         $nama_pengguna_baru = $conn->real_escape_string($_POST['nama_pengguna_baru']);
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_edit_akun'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_simpan_statistik'])) {
-    if (!isset($conn) || !$conn instanceof mysqli) {
+    if (!isset($conn) || !is_object($conn)) {
         $pesan_update_statistik = "Kesalahan koneksi database.";
     } else {
         $jenjang_keahlian_baru = $_POST['jenjang_keahlian_baru'] ?? null;
@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_simpan_statisti
 }
 
 $pengajar = null;
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $stmt_select = $conn->prepare("SELECT nama_pengajar, foto_profil, jenjang_keahlian, keahlian, harga_layanan, no, riwayat_pendidikan, lokasi FROM pengajar WHERE id_pengajar = ?");
     if ($stmt_select) {
         $stmt_select->bind_param("i", $id_pengajar_session);
@@ -138,7 +138,7 @@ if (isset($conn) && $conn instanceof mysqli) {
 }
 
 $riwayat_mengajar_list = [];
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn)) {
     $sql_riwayat = "
         SELECT
             pl.id_permintaan,
@@ -1043,7 +1043,7 @@ function format_jam_wib($jam_sql)
             });
         });
     </script>
-    <?php if (isset($conn) && $conn instanceof mysqli) {
+    <?php if (isset($conn) && is_object($conn)) {
         $conn->close();
     } ?>
 </body>

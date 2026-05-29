@@ -20,7 +20,7 @@ $teacher_details = null;
 $koneksi_database_berhasil = false;
 
 try {
-    if (!isset($conn) || !($conn instanceof mysqli) || $conn->connect_error) {
+    if (!isset($conn) || !is_object($conn) || $conn->connect_error) {
         throw new Exception("Koneksi ke basis data gagal.");
     }
     $koneksi_database_berhasil = true; 
@@ -46,7 +46,7 @@ try {
     $_SESSION['error_message_konfirmasi'] = "Terjadi kesalahan sistem: " . $e->getMessage();
     error_log("Error di konfirmasi.php (ambil detail pengajar): " . $e->getMessage());
 } finally {
-    if ($koneksi_database_berhasil && isset($conn) && $conn instanceof mysqli && $conn->ping()) {
+    if ($koneksi_database_berhasil && isset($conn) && is_object($conn) && $conn->ping()) {
         $conn->close();
     }
 }

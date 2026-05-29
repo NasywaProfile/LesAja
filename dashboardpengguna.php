@@ -60,7 +60,7 @@ if ($stmt_answered_tasks) {
     error_log("Failed to prepare SQL for answered tasks: " . $conn->error);
 }
 
-if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error && $conn->ping()) {
+if (isset($conn) && is_object($conn) && !$conn->connect_error && $conn->ping()) {
     $conn->close();
 }
 ?>

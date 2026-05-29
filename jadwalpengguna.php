@@ -11,7 +11,7 @@ try {
         exit();
     }
 
-    if (!isset($conn) || !($conn instanceof mysqli) || $conn->connect_error) {
+    if (!isset($conn) || !is_object($conn) || $conn->connect_error) {
         throw new Exception("Koneksi ke basis data gagal.");
     }
 
@@ -49,7 +49,7 @@ try {
     }
     $stmt_jadwal->close();
     
-    if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error && $conn->ping()) {
+    if (isset($conn) && is_object($conn) && !$conn->connect_error && $conn->ping()) {
         $conn->close();
     }
 } catch (Exception $e) {
